@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -57,10 +57,31 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-</script>
+    function playAudio(e)
+    {
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+      if (!audio) return;
+      audio.currentTime = 0; // rewind so we can repeatedly play it
+      audio.play();
+      if (!key) return;
+      key.classList.add("playing");
+    }
 
+    const keys = document.querySelectorAll(".key");
+    keys.forEach(key => key.addEventListener("transitionend", removeTransition))
 
+    function removeTransition(e)
+    {
+      if (e.propertyName !== "transform") return; // skip if it is not a transform
+      this.classList.remove("playing");
+    }
+
+    window.addEventListener("keydown", playAudio);
+
+  </script>
 </body>
+
 </html>
